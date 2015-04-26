@@ -2,13 +2,11 @@ module.exports = function (server, models) {
     var Player = models["Player"];
 
     function getAllUsersResponse(request, response, next) {
-
         Player.find(function (err, players) {
             if (err) return console.error(err);
             response.send(players);
             next();
         });
-
     }
 
     function getUserResponse(request, response, next) {
@@ -23,7 +21,9 @@ module.exports = function (server, models) {
         next();
     }
 
-    function putUserResponse(request, response) {
+
+
+    function putUserResponse(request, response, next) {
         //Hard-coded as proof of concept only
         console.log("Putting?");
         response.send(
