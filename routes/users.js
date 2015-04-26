@@ -1,4 +1,4 @@
-module.exports = function (server, db) {
+module.exports = function (server, mongoose, db) {
 
     function getAllUsersResponse(request, response, next) {
         //Hard-coded as proof of concept only
