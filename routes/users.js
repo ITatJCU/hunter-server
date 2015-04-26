@@ -1,4 +1,4 @@
-module.exports = function (server) {
+module.exports = function (server, db) {
 
     function getAllUsersResponse(request, response, next) {
         //Hard-coded as proof of concept only

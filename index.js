@@ -23,7 +23,7 @@ function initialiseRoutes() {
 
     fs.readdirSync(routes).forEach(function (file) {
         console.log('\t' + file);
-        require(routes + '/' + file)(server);
+        require(routes + '/' + file)(server, db);
     });
 }
 
