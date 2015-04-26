@@ -14,6 +14,16 @@ db.once('open', function (callback) {
 
 var server = restify.createServer();
 
+
+/**
+ * Loading Models
+ * @type {string[]}
+ */
+var schemas = [];
+['Player'].forEach(function (model) {
+    schemas[model] = require('./schemas/' + model)(mongoose);
+});
+
 /**
  * Load routes from a sub directory recursively
  */
@@ -23,7 +33,7 @@ function initialiseRoutes() {
 
     fs.readdirSync(routes).forEach(function (file) {
         console.log('\t' + file);
-        require(routes + '/' + file)(server, mongoose, db);
+        require(routes + '/' + file)(server, schemas);
     });
 }
 

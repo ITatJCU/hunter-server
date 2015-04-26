@@ -1,15 +1,5 @@
-module.exports = function (server, mongoose, db) {
-
-    ///User Schema
-    var playerSchema = mongoose.Schema({
-        alias: String
-    });
-
-    var Player = mongoose.model('Player', playerSchema);
-
-    ///Mongoose Model
-
-    ///REST End-Points
+module.exports = function (server, models) {
+    var Player = models["Player"];
 
     function getAllUsersResponse(request, response, next) {
 
