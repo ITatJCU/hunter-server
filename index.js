@@ -1,6 +1,17 @@
 var restify = require('restify');
 var fs = require('fs');
 
+var mongoose = require('mongoose');
+//ToDo: Remove hardcoded URL
+mongoose.connect('mongodb://10.8.164.68/hunter');
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'Database connection error:'));
+
+db.once('open', function (callback) {
+    console.log('Database connected successfully');
+});
+
 var server = restify.createServer();
 
 /**
