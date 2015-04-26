@@ -3,7 +3,7 @@ module.exports = function (server, models) {
     //Required for NotFoundError when a code does not exist
     var restify = require('restify');
 
-    function getAllCodesResponse(response, request, next) {
+    function getAllCodesResponse(request, response, next) {
         Code.find({}, function (err, codes) {
             if (err) return console.error(err);
             response.send(codes);
@@ -52,5 +52,5 @@ module.exports = function (server, models) {
     server.get('/codes', getAllCodesResponse);
     server.get('/codes/:id', getCodeResponse);
     server.put('/codes', putCodeResponse);
-    server.del('/codes/:id', delCodeResponse);
+    server.del('/codes', delCodeResponse);
 };
