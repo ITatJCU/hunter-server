@@ -21,8 +21,6 @@ module.exports = function (server, models) {
         next();
     }
 
-
-
     function putUserResponse(request, response, next) {
         //Hard-coded as proof of concept only
         console.log("Putting?");
