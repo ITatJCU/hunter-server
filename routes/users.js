@@ -35,6 +35,7 @@ module.exports = function (server, models) {
             var newPlayer = Player({alias : request.body.alias});
             newPlayer.save(function(err) {
                 if(err) throw err;
+                response.send(newPlayer);
                 next();
             });
         }
