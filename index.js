@@ -26,7 +26,7 @@ server.use(restify.bodyParser({mapParams: true}));
  * @type {string[]}
  */
 var schemas = [];
-['Player'].forEach(function (model) {
+['Player', 'Event'].forEach(function (model) {
     schemas[model] = require('./schemas/' + model)(mongoose);
 });
 
