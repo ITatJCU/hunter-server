@@ -3,7 +3,7 @@ module.exports = function (server, models) {
     //Required for NotFoundError when a player does not exist
     var restify = require('restify');
 
-    function getAllUsersResponse(request, response, next) {
+    function getAllPlayersResponse(request, response, next) {
 
         Player.find({}, function (err, players) {
             if (err) return console.error(err);
@@ -13,14 +13,14 @@ module.exports = function (server, models) {
 
     }
 
-    function getUserResponse(request, response, next) {
+    function getPlayerResponse(request, response, next) {
         Player.find({"_id": request.params.id}, function (err, player) {
             response.send(player);
             next();
         });
     }
 
-    function putUserResponse(request, response, next) {
+    function putPlayerResponse(request, response, next) {
         if (request.body._id !== null && request.body._id != undefined) {
             Player.findOne({_id: request.body._id}, function (err, player) {
                 if (err) return next(new restify.NotFoundError("Unknown user"));
@@ -41,8 +41,8 @@ module.exports = function (server, models) {
         }
     }
 
-    server.get('/users', getAllUsersResponse);
-    server.get('/user/:id', getUserResponse);
-    server.put('/user', putUserResponse);
+    server.get('/players', getAllPlayersResponse);
+    server.get('/players/:id', getPlayerResponse);
+    server.put('/players', putPlayerResponse);
 
 };
