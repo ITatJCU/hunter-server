@@ -1,10 +1,10 @@
 module.exports = function (mongoose) {
 
     var codeSchema = mongoose.Schema({
-        title: {type: String, required: true, index: { unique: true }},
+        title: {type: String, required: true, index: {unique: true}},
         description: String,
         weight: Number,
-        location:{
+        location: {
             latitude: Number,
             longitude: Number
         }
