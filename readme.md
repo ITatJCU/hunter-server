@@ -9,7 +9,7 @@ Every time you sync your fork be sure to do the following:
 1. From command line:
   * Change directory to the Node.js project
     * For example: cd path/to/project/hunter-server
-  * Run "nmp install" (without quotes)
+  * Run "npm install" (without quotes)
   * Run node on the JS file
     * For example: node restifyExample.js
   * Open a web browser and go to the server IP to test that everything works
