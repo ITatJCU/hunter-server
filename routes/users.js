@@ -1,29 +1,24 @@
 module.exports = function (server, mongoose, db) {
 
+    ///User Schema
+    var playerSchema = mongoose.Schema({
+        alias: String
+    });
+
+    var Player = mongoose.model('Player', playerSchema);
+
+    ///Mongoose Model
+
+    ///REST End-Points
+
     function getAllUsersResponse(request, response, next) {
-        //Hard-coded as proof of concept only
-        response.send(
-            {
-                "users": [
-                    {
-                        "id": 1,
-                        "username": "Lachlan",
-                        "alias": "lachlan.robertson"
-                    },
-                    {
-                        "id": 2,
-                        "username": "John",
-                        "alias": "john.hardy"
-                    },
-                    {
-                        "id": 3,
-                        "username": "Peter",
-                        "alias": "peter.thompson"
-                    }
-                ]
-            }
-        );
-        next();
+
+        Player.find(function (err, players) {
+            if (err) return console.error(err);
+            response.send(players);
+            next();
+        });
+
     }
 
     function getUserResponse(request, response, next) {
