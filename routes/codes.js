@@ -24,6 +24,7 @@ module.exports = function (server, models) {
                 if (err) return next(new restify.NotFoundError("Unknown code"));
                 code.title = request.body.title;
                 code.description = request.body.description;
+                code.weight = request.body.weight;
                 code.location = {latitude: request.body.latitude, longitude: request.body.longitude};
                 code.save(function (err) {
                     if (err) throw err;
