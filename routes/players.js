@@ -32,6 +32,19 @@ module.exports = function (server, models) {
         });
     }
 
+    function removePlayer(request, response, next) {
+        Player.remove({_id: request.params.id}, function (err) {
+            if (err) {
+                console.log("failed to remove : " + request);
+                response.send("failed to remove : " + request);
+            } else {
+                console.log(request + "deleted : ");
+                response.send(request + "deleted : ");
+            }
+        });
+        next();
+    }
+
     function createPlayer(request, response, next) {
         var newPlayer = Player({alias: request.body.alias});
         newPlayer.save(function (err) {
@@ -52,5 +65,5 @@ module.exports = function (server, models) {
     server.get('/players', getAllPlayers);
     server.get('/players/:id', getPlayerById);
     server.put('/players', upsertPlayer);
-
+    server.del('/players/:id', removePlayer);
 };
