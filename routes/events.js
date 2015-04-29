@@ -3,6 +3,9 @@ module.exports = function (server, models) {
     //Required for NotFoundError when an Event object does not exist
     var restify = require('restify');
 
+
+    var eventPropertyFilter = "-codes -__v";
+
     /**
      * Retrieves all Event objects from database.
      * @param request
@@ -10,7 +13,7 @@ module.exports = function (server, models) {
      * @param next
      */
     function getAllEvents(request, response, next) {
-        Event.find({}, function (err, event) {
+        Event.find({}, eventPropertyFilter, function (err, event) {
             if (err) return console.error(err);
             response.send(event);
             next();
@@ -24,7 +27,7 @@ module.exports = function (server, models) {
      * @param next
      */
     function getEventById(request, response, next) {
-        Event.find({"_id": request.params.id}, function (err, event) {
+        Event.find({"_id": request.params.id}, eventPropertyFilter, function (err, event) {
             response.send(event);
             next();
         });
@@ -38,7 +41,7 @@ module.exports = function (server, models) {
      * @param next
      */
     function updateEvent(request, response, next) {
-        Event.findOne({_id: request.body._id}, function (err, event) {
+        Event.findOne({_id: request.body._id},eventPropertyFilter, function (err, event) {
             if (err) return next(new restify.NotFoundError("Unknown event"));
             event.title = request.body.title;
             event.description = request.body.description;
@@ -47,7 +50,7 @@ module.exports = function (server, models) {
             }
             event.save(function (err) {
                 if (err) throw err;
-                response.send(event);
+                response.send();
                 next();
             });
         });
@@ -97,7 +100,7 @@ module.exports = function (server, models) {
             event.codes.push(request.params.codeId);
             event.save(function (err) {
                 if (err) throw err;
-                response.send(event);
+                response.send();
                 next();
             });
         });
@@ -133,11 +136,11 @@ module.exports = function (server, models) {
                 codes.splice(index, 1);
                 event.save(function (err) {
                     if (err) throw err;
-                    response.send(event);
+                    response.send();
                     next();
                 });
             } else {
-                response.send(event);
+                response.send();
                 next();
             }
         });
