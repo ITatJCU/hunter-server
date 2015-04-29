@@ -117,6 +117,12 @@ module.exports = function (server, models) {
         });
     }
 
+    /**
+     * Removes a Code object from an Event object in the database.
+     * @param request
+     * @param response
+     * @param next
+     */
     function removeCodeFromEvent(request, response, next) {
         Event.findOne({_id: request.params.eventId}, function (err, event) {
             var codes = event.codes;
