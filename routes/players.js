@@ -14,7 +14,7 @@ module.exports = function (server, models) {
     }
 
     function getPlayerById(request, response, next) {
-        Player.find({"_id": request.params.id}, function (err, player) {
+        Player.findOne({"_id": request.params.id}, function (err, player) {
             response.send(player);
             next();
         });
