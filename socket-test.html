@@ -8,13 +8,12 @@
 </head>
 <body>
 
-<textarea id="socketOutput" style="width:100%; height:100%;"></textarea>
+<textarea id="socketOutput" style="width:100%; height:100vh;"></textarea>
 
 <script>
     var socket = io.connect("http://127.0.0.1:8080");
     socket.on("Code scanned", function (msg) {
-        document.getElementById("socketOutput").value += "\n" + msg;
-        console.log(msg);
+        document.getElementById("socketOutput").value += "\n" + JSON.stringify(msg);
     });
 </script>
 
