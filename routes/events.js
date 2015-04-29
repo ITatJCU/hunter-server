@@ -117,9 +117,20 @@ module.exports = function (server, models) {
         });
     }
 
+    function removeCodeFromEvent(request, response, next) {
+        //TODO Remove a specific codeId from an Event object
+        /*
+        Find one Event object using _id
+        Get the 'codes' array
+        Remove codeId from array
+        Save
+         */
+    }
+
     server.get('/events', getAllEvents);
     server.get('/events/:id', getEventById);
     server.put('/events', upsertEvent);
     server.put('/events/:eventId/:codeId', addCodeToEvent);
     server.del('/events', deleteEvent);
+    server.del('/events/:eventId/:codeId', removeCodeFromEvent)
 };
