@@ -27,7 +27,7 @@ module.exports = function (server, models) {
      * @param next
      */
     function getEventById(request, response, next) {
-        Event.find({"_id": request.params.id}, eventPropertyFilter, function (err, event) {
+        Event.findOne({"_id": request.params.id}, eventPropertyFilter, function (err, event) {
             response.send(event);
             next();
         });
