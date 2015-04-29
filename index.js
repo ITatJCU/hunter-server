@@ -5,7 +5,9 @@ var LogEventDispatcher = require('./lib/utilities/log-event-dispatcher');
 
 var mongoose = require('mongoose');
 //ToDo: Remove hardcoded URL
-mongoose.connect('mongodb://10.8.164.68/hunter');
+mongoose.connect(
+  process.env['MONGO_URL'] || 'mongodb://10.8.164.68/hunter'
+);
 
 var db = mongoose.connection;
 db.on('error', function(err){
