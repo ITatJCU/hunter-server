@@ -24,6 +24,8 @@ module.exports = function (server, models) {
             code.title = request.body.title;
             code.description = request.body.description;
             code.location = {latitude: request.body.latitude, longitude: request.body.longitude};
+            code.weight = request.body.weight;
+
             code.save(function (err) {
                 if (err) throw err;
                 response.send(code);
