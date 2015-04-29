@@ -1,4 +1,5 @@
 module.exports = function (mongoose) {
+    var idvalidator = require('mongoose-id-validator');
 
     ///User Schema
     var playerSchema = mongoose.Schema({
@@ -12,6 +13,9 @@ module.exports = function (mongoose) {
             }
         ]
     });
+
+    playerSchema.plugin(idvalidator);
+
 
     return mongoose.model('Player', playerSchema);
 
