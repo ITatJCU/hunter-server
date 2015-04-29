@@ -118,13 +118,18 @@ module.exports = function (server, models) {
     }
 
     function removeCodeFromEvent(request, response, next) {
-        //TODO Remove a specific codeId from an Event object
-        /*
-        Find one Event object using _id
-        Get the 'codes' array
-        Remove codeId from array
-        Save
-         */
+        Event.findOne({_id: request.params.eventId}, function (err, event) {
+            var codes = event.codes;
+            var index = codes.indexOf(request.params.codeId);
+            if (index > -1) {
+                codes.splice(index, 1);
+                event.save(function (err) {
+                    if (err) throw err;
+                    response.send();
+                    next();
+                });
+            }
+        });
     }
 
     server.get('/events', getAllEvents);
