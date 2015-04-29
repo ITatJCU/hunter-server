@@ -66,4 +66,5 @@ module.exports = function (server, models) {
     server.get('/players/:id', getPlayerById);
     server.put('/players', upsertPlayer);
     server.del('/players/:id', removePlayer);
+
 };

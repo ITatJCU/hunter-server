@@ -1,7 +1,10 @@
 module.exports = function (server, models) {
     var Event = models['Event'];
+    var Player = models['Player'];
+
     //Required for NotFoundError when an Event object does not exist
     var restify = require('restify');
+    var mongoose = require('mongoose');
 
 
     var eventPropertyFilter = "-codes -__v";
@@ -146,10 +149,59 @@ module.exports = function (server, models) {
         });
     }
 
+    function getPlayerLeaderboardForEvent(request, response, next) {
+
+        Player.aggregate([
+                {"$unwind": "$scans"},
+                {$match: {"scans.event": mongoose.Types.ObjectId(request.params.id)}},
+                {$sort: {"scans.scannedAt": -1}},
+                {
+                    $group: {
+                        _id: {code: "$scans.code", event: "$scans.event", player: "$_id"},
+                        scan: {$first: "$scans"},
+                        alias: {$first: "$alias"},
+                        playerId: {$first: "$_id"}
+                    }
+                },
+                {$sort: {"scan.scannedAt": -1}},
+                {
+                    $group: {
+                        _id: "$_id.player",
+                        eventId: {$first: "$_id.event"},
+                        scans: {$push: "$scan"},
+                        alias: {$first: "$alias"},
+                        startTime: {$last: "$scan.scannedAt"},
+                        endTime: {$first: "$scan.scannedAt"}
+
+                    }
+                },
+                {
+                    $project: {
+                        numberOfScans: {$size: "$scans"},
+                        alias: "$alias",
+                        eventId: "$eventId",
+                        duration: {$subtract: ["$endTime", "$startTime"]},
+                        startTime: "$startTime",
+                        endTime: "$endTime"
+                    }
+                },
+                {$sort: {"numberOfScans": -1, "duration": -1}}
+
+            ],
+            function (err, res) {
+                if(err) response.send(new restify.ImATeapotError("More Caffiene Needed..."));
+                response.send(res);
+                next();
+            });
+
+    }
+
     server.get('/events', getAllEvents);
     server.get('/events/:id', getEventById);
     server.put('/events', upsertEvent);
     server.put('/events/:eventId/:codeId', addCodeToEvent);
     server.del('/events', deleteEvent);
     server.del('/events/:eventId/:codeId', removeCodeFromEvent)
+    server.get('/events/:id/leaderboard', getPlayerLeaderboardForEvent);
+
 };
