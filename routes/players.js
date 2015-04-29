@@ -7,7 +7,7 @@ module.exports = function (server, models) {
 
         Player.find({}, function (err, players) {
             if (err) return console.error(err);
-            response.send(players);
+            response.send({ players: players });
             next();
         });
 
@@ -15,7 +15,7 @@ module.exports = function (server, models) {
 
     function getPlayerById(request, response, next) {
         Player.findOne({"_id": request.params.id}, function (err, player) {
-            response.send(player);
+            response.send({ player: player });
             next();
         });
     }
@@ -26,7 +26,7 @@ module.exports = function (server, models) {
             player.alias = request.body.alias;
             player.save(function (err) {
                 if (err) throw err;
-                response.send(player);
+                response.send({ player: player });
                 next();
             });
         });
