@@ -12,7 +12,7 @@ module.exports = function (server, models) {
     }
 
     function getCodeById(request, response, next) {
-        Code.find({"_id": request.params.id}, function (err, code) {
+        Code.findOne({"_id": request.params.id}, function (err, code) {
             response.send(code);
             next();
         });
