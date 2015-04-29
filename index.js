@@ -1,19 +1,23 @@
 var restify = require('restify');
 var fs = require('fs');
+var LogEventDispatcher = require('./lib/utilities/log-event-dispatcher');
+
 
 var mongoose = require('mongoose');
 //ToDo: Remove hardcoded URL
 mongoose.connect('mongodb://10.8.164.68/hunter');
 
 var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'Database connection error:'));
+db.on('error', function(err){
+    LogEventDispatcher.log('Database error:' + err);
+});
 
 db.once('open', function (callback) {
-    console.log('Database connected successfully');
+    LogEventDispatcher.log('Database connected successfully');
 });
 
 var server = restify.createServer();
-
+server.io = require('./config/socketio')(server);
 
 //Configure Server
 server.use(restify.acceptParser(server.acceptable));
@@ -26,9 +30,6 @@ server.use(restify.bodyParser({mapParams: true}));
 
 //Initialise the loggers
 require('./config/loggers')(server);
-
-var LogEventDispatcher = require('./lib/utilities/log-event-dispatcher');
-
 
 /**
  * Loading Models
