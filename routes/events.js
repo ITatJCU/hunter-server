@@ -1,6 +1,6 @@
 module.exports = function (server, models) {
     var Event = models['Event'];
-    //Required for NotFoundError when a code does not exist
+    //Required for NotFoundError when an Event object does not exist
     var restify = require('restify');
 
     /**
