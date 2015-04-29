@@ -4,6 +4,9 @@ module.exports = function (server, models) {
     var Player = models['Player'];
 
     var restify = require('restify');
+    var http = require('http').Server(server);
+    var io = require('socket.io')(http);
+    var socket = io();
 
     /**
      * Add a new scan for a player
@@ -12,7 +15,6 @@ module.exports = function (server, models) {
      * @param next
      */
     function addPlayerScan(request, response, next) {
-
         var playerId = request.headers.player;
 
         if (!playerId) {
@@ -25,20 +27,18 @@ module.exports = function (server, models) {
                     event: request.params.eventId,
                     code: request.params.codeId
                 });
-                player.validate(function(err) {
-                    //err.errors would contain a validation error for manufacturer with default message
 
+                player.validate(function (err) {
                     if (err) return next(new restify.NotFoundError("Invalid Code or Event Id Specified"));
-                    else{
-                        player.save(function (err){
+                    else {
+                        player.save(function (err) {
                             if (err) throw err;
+                            socket.emit('Code scanned', player);
                             response.send(player);
                             next();
                         })
                     }
-
                 });
-
             });
         }
     }
