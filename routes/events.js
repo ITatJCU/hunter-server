@@ -3,6 +3,12 @@ module.exports = function (server, models) {
     //Required for NotFoundError when a code does not exist
     var restify = require('restify');
 
+    /**
+     * Retrieves all Event objects from database.
+     * @param request
+     * @param response
+     * @param next
+     */
     function getAllEvents(request, response, next) {
         Event.find({}, function (err, event) {
             if (err) return console.error(err);
@@ -11,6 +17,12 @@ module.exports = function (server, models) {
         });
     }
 
+    /**
+     * Retrieves an Event object from the database based on supplied _id.
+     * @param request
+     * @param response
+     * @param next
+     */
     function getEventById(request, response, next) {
         Event.find({"_id": request.params.id}, function (err, event) {
             response.send(event);
@@ -18,6 +30,13 @@ module.exports = function (server, models) {
         });
     }
 
+    /**
+     * Updates an Event object based on supplied _id.
+     * If _id doesn't exist a NotFoundError is returned.
+     * @param request
+     * @param response
+     * @param next
+     */
     function updateEvent(request, response, next) {
         Event.findOne({_id: request.body._id}, function (err, event) {
             if (err) return next(new restify.NotFoundError("Unknown event"));
@@ -34,6 +53,12 @@ module.exports = function (server, models) {
         });
     }
 
+    /**
+     * Creates a new Event object and saves it to the database.
+     * @param request
+     * @param response
+     * @param next
+     */
     function createEvent(request, response, next) {
         var newEvent = Event({title: request.body.title, description: request.body.description});
         if (request.body.date != null && request.body.date != undefined) {
@@ -46,6 +71,12 @@ module.exports = function (server, models) {
         });
     }
 
+    /**
+     * Upserts a new Event object with the database
+     * @param request
+     * @param response
+     * @param next
+     */
     function upsertEvent(request, response, next) {
         if (request.body._id !== null && request.body._id != undefined) {
             updateEvent(request, response, next);
@@ -54,6 +85,12 @@ module.exports = function (server, models) {
         }
     }
 
+    /**
+     * Relates a Code object to an Event object in the database.
+     * @param request
+     * @param response
+     * @param next
+     */
     function addCodeToEvent(request, response, next) {
         Event.findOne({"_id": request.params.eventId}, function (err, event) {
             if (err) throw err;
@@ -66,6 +103,12 @@ module.exports = function (server, models) {
         });
     }
 
+    /**
+     * Deletes an Event object from the database with the given _id.
+     * @param request
+     * @param response
+     * @param next
+     */
     function deleteEvent(request, response, next) {
         Event.findOneAndRemove({_id: request.body._id}, function (err) {
             if (err) throw err;
