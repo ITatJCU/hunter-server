@@ -21,6 +21,7 @@
   "homepage": "https://github.com/ITatJCU/hunter-server",
   "dependencies": {
     "mongoose": "^4.0.2",
+    "mongoose-id-validator": "^0.1.8",
     "restify": "^3.0.2"
   }
 }
