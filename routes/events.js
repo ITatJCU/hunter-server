@@ -131,9 +131,12 @@ module.exports = function (server, models) {
                 codes.splice(index, 1);
                 event.save(function (err) {
                     if (err) throw err;
-                    response.send();
+                    response.send(event);
                     next();
                 });
+            } else {
+                response.send(event);
+                next();
             }
         });
     }
