@@ -54,7 +54,7 @@ module.exports = function (server, models) {
         }
     }
 
-    function putEventAddCodeResponse(request, response, next) {
+    function addCodeToEvent(request, response, next) {
         Event.findOne({"_id": request.params.eventId}, function (err, event) {
             if (err) throw err;
             event.codes.push(request.params.codeId);
@@ -66,7 +66,7 @@ module.exports = function (server, models) {
         });
     }
 
-    function delEventResponse(request, response, next) {
+    function deleteEvent(request, response, next) {
         Event.findOneAndRemove({_id: request.body._id}, function (err) {
             if (err) throw err;
             response.send();
@@ -77,6 +77,6 @@ module.exports = function (server, models) {
     server.get('/events', getAllEvents);
     server.get('/events/:id', getEventById);
     server.put('/events', upsertEvent);
-    server.put('/events/:eventId/:codeId', putEventAddCodeResponse);
-    server.del('/events', delEventResponse);
+    server.put('/events/:eventId/:codeId', addCodeToEvent);
+    server.del('/events', deleteEvent);
 };
