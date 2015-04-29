@@ -117,9 +117,36 @@ module.exports = function (server, models) {
         });
     }
 
+    /**
+     * Removes a Code object from an Event object in the database.
+     * @param request
+     * @param response
+     * @param next
+     */
+    function removeCodeFromEvent(request, response, next) {
+        Event.findOne({_id: request.params.eventId}, function (err, event) {
+            if (err) throw err;
+
+            var codes = event.codes;
+            var index = codes.indexOf(request.params.codeId);
+            if (index > -1) {
+                codes.splice(index, 1);
+                event.save(function (err) {
+                    if (err) throw err;
+                    response.send(event);
+                    next();
+                });
+            } else {
+                response.send(event);
+                next();
+            }
+        });
+    }
+
     server.get('/events', getAllEvents);
     server.get('/events/:id', getEventById);
     server.put('/events', upsertEvent);
     server.put('/events/:eventId/:codeId', addCodeToEvent);
     server.del('/events', deleteEvent);
+    server.del('/events/:eventId/:codeId', removeCodeFromEvent)
 };
