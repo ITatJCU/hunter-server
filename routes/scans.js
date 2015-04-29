@@ -30,7 +30,7 @@ module.exports = function (server, models) {
                     else {
                         player.save(function (err) {
                             if (err) throw err;
-                            socket.io.emit('Code scanned', player);
+                            server.io.emit('Code scanned', player);
                             response.send(player);
                             next();
                         })
