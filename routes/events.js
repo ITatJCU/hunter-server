@@ -125,6 +125,8 @@ module.exports = function (server, models) {
      */
     function removeCodeFromEvent(request, response, next) {
         Event.findOne({_id: request.params.eventId}, function (err, event) {
+            if (err) throw err;
+
             var codes = event.codes;
             var index = codes.indexOf(request.params.codeId);
             if (index > -1) {
