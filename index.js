@@ -13,6 +13,9 @@ db.once('open', function (callback) {
 });
 
 var server = restify.createServer();
+
+
+//Configure Server
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.authorizationParser());
 server.use(restify.dateParser());
@@ -20,6 +23,12 @@ server.use(restify.queryParser());
 server.use(restify.jsonp());
 server.use(restify.gzipResponse());
 server.use(restify.bodyParser({mapParams: true}));
+
+//Initialise the loggers
+require('./config/loggers')(server);
+
+var LogEventDispatcher = require('./lib/utilities/log-event-dispatcher');
+
 
 /**
  * Loading Models
@@ -34,11 +43,11 @@ var schemas = [];
  * Load routes from a sub directory recursively
  */
 function initialiseRoutes() {
-    console.log('Loading routes...');
+    LogEventDispatcher.log('Loading routes...');
     var routes = __dirname + '/routes';
 
     fs.readdirSync(routes).forEach(function (file) {
-        console.log('\t' + file);
+        LogEventDispatcher.log('\t' + file);
         require(routes + '/' + file)(server, schemas);
     });
 }
@@ -47,5 +56,5 @@ function initialiseRoutes() {
 //Start the server
 server.listen(8080, function () {
     initialiseRoutes();
-    console.log('%s listening at %s', server.name, server.url);
+    LogEventDispatcher.log(server.name + ' listening at ' + server.url);
 });
