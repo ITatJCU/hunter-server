@@ -2,11 +2,8 @@ module.exports = function (server, models) {
     var Code = models['Code'];
     var Event = models['Event'];
     var Player = models['Player'];
-
+    //Needed for various errors
     var restify = require('restify');
-//    var http = require('http').Server(server);
-//    var io = require('socket.io')(http);
-//    var socket = io();
 
     /**
      * Add a new scan for a player
@@ -33,7 +30,7 @@ module.exports = function (server, models) {
                     else {
                         player.save(function (err) {
                             if (err) throw err;
-                            //socket.emit('Code scanned', player);
+                            server.io.emit('Code scanned', player);
                             response.send(player);
                             next();
                         })
