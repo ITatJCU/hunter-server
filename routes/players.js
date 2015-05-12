@@ -63,7 +63,7 @@ module.exports = function (server, models) {
             }
             else {
                 response.setHeader('content-type', 'application/json');
-                response.send(401, { message: err.message });
+                response.send(400, { message: err.message });
                 next();
             }
         });
