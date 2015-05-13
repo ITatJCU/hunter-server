@@ -3,45 +3,37 @@ module.exports = function (server, models) {
     //Required for NotFoundError when a player does not exist
     var restify = require('restify');
 
-    function getAllPlayersResponse(request, response, next) {
+    function getAllPlayers(request, response, next) {
 
         Player.find({}, function (err, players) {
             if (err) return console.error(err);
-            response.send(players);
+            response.send({ players: players });
             next();
         });
 
     }
 
-    function getPlayerResponse(request, response, next) {
-        Player.find({"_id": request.params.id}, function (err, player) {
-            response.send(player);
+    function getPlayerById(request, response, next) {
+        Player.findOne({"_id": request.params.id}, function (err, player) {
+            response.send({ player: player });
             next();
         });
     }
 
-    function putPlayerResponse(request, response, next) {
-        if (request.body._id !== null && request.body._id != undefined) {
-            Player.findOne({_id: request.body._id}, function (err, player) {
-                if (err) return next(new restify.NotFoundError("Unknown user"));
-                player.alias = request.body.alias;
-                player.save(function (err) {
-                    if (err) throw err;
-                    response.send(player);
-                    next();
-                });
-            });
-        } else {
-            var newPlayer = Player({alias: request.body.alias});
-            newPlayer.save(function (err) {
+    function updatePlayer(request, response, next) {
+        Player.findOne({_id: request.body._id}, function (err, player) {
+            if (err) return next(new restify.NotFoundError("Unknown user"));
+            player.alias = request.body.alias;
+            player.save(function (err) {
                 if (err) throw err;
-                response.send(newPlayer);
+                response.send({ player: player });
                 next();
             });
-        }
+        });
     }
+    
 
-    function removePlayer(request, response, next) {
+   function removePlayer(request, response, next) {
         Player.remove({_id: request.params.id}, function (err) {
             if (err) {
                 console.log("failed to remove : " + request);
@@ -57,7 +49,7 @@ module.exports = function (server, models) {
     function createPlayer(request, response, next) {
         var newPlayer = Player({alias: request.body.alias});
         newPlayer.save(function (err) {
-            if (typeof err === 'undefined') {
+            if (!err) {
                 response.send(newPlayer);
                 next();
             }
@@ -69,9 +61,10 @@ module.exports = function (server, models) {
         });
     }
 
-    server.get('/players', getAllPlayersResponse);
-    server.get('/players/:id', getPlayerResponse);
-    server.put('/players', putPlayerResponse);
+    server.get('/players', getAllPlayers);
+    server.get('/players/:id', getPlayerById);
+    server.put('/players', updatePlayer);
     server.del('/players/:id', removePlayer);
     server.post('/players', createPlayer);
+
 };
