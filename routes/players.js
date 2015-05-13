@@ -31,9 +31,8 @@ module.exports = function (server, models) {
             });
         });
     }
-    
 
-   function removePlayer(request, response, next) {
+    function removePlayer(request, response, next) {
         Player.remove({_id: request.params.id}, function (err) {
             if (err) {
                 console.log("failed to remove : " + request);
@@ -61,9 +60,17 @@ module.exports = function (server, models) {
         });
     }
 
+    function upsertPlayer(request, response, next) {
+        if (request.body._id !== null && request.body._id != undefined) {
+            updatePlayer(request, response, next);
+        } else {
+            createPlayer(request, response, next);
+        }
+    }
+
     server.get('/players', getAllPlayers);
     server.get('/players/:id', getPlayerById);
-    server.put('/players', updatePlayer);
+    server.put('/players', upsertPlayer);
     server.del('/players/:id', removePlayer);
     server.post('/players', createPlayer);
 
