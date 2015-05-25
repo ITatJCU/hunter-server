@@ -48,9 +48,15 @@ module.exports = function (server, models) {
     function createPlayer(request, response, next) {
         var newPlayer = Player({alias: request.body.alias});
         newPlayer.save(function (err) {
-            if (err) throw err;
-            response.send(newPlayer);
-            next();
+            if (!err) {
+                response.send(newPlayer);
+                next();
+            }
+            else {
+                response.setHeader('content-type', 'application/json');
+                response.send(400, { message: err.message });
+                next();
+            }
         });
     }
 
@@ -66,5 +72,6 @@ module.exports = function (server, models) {
     server.get('/players/:id', getPlayerById);
     server.put('/players', upsertPlayer);
     server.del('/players/:id', removePlayer);
+    server.post('/players', createPlayer);
 
 };
