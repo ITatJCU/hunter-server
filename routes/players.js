@@ -5,7 +5,7 @@ module.exports = function (server, models) {
 
     function getAllPlayers(request, response, next) {
 
-        Player.find({}, function (err, players) {
+        Player.find({},"-scans -__v",{sort: { 'createdAt' : -1 }}, function (err, players) {
             if (err) return console.error(err);
             response.send({ players: players });
             next();
@@ -68,6 +68,7 @@ module.exports = function (server, models) {
         }
     }
 
+    //Workaround as .head is not sending data in the response
     server.get('/players', getAllPlayers);
     server.get('/players/:id', getPlayerById);
     server.put('/players', upsertPlayer);
