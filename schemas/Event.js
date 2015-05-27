@@ -8,7 +8,8 @@ module.exports = function (mongoose) {
             {
                 code: {type: mongoose.Schema.Types.ObjectId, ref: 'Code'}
             }
-        ]
+        ],
+        createdAt: {type: Date, default: Date.now},
     });
 
     return mongoose.model('Event', eventSchema);

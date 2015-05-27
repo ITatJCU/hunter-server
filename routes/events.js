@@ -16,9 +16,9 @@ module.exports = function (server, models) {
      * @param next
      */
     function getAllEvents(request, response, next) {
-        Event.find({}, eventPropertyFilter, function (err, event) {
+        Event.find({}, eventPropertyFilter, {sort: {'createdAt': -1}}, function (err, events) {
             if (err) return console.error(err);
-            response.send(event);
+            response.send({events: event});
             next();
         });
     }
@@ -44,7 +44,7 @@ module.exports = function (server, models) {
      * @param next
      */
     function updateEvent(request, response, next) {
-        Event.findOne({_id: request.body._id},eventPropertyFilter, function (err, event) {
+        Event.findOne({_id: request.body._id}, eventPropertyFilter, function (err, event) {
             if (err) return next(new restify.NotFoundError("Unknown event"));
             event.title = request.body.title;
             event.description = request.body.description;
@@ -189,7 +189,7 @@ module.exports = function (server, models) {
 
             ],
             function (err, res) {
-                if(err) response.send(new restify.ImATeapotError("More Caffiene Needed..."));
+                if (err) response.send(new restify.ImATeapotError("More Caffiene Needed..."));
                 response.send(res);
                 next();
             });
