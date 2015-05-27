@@ -6,14 +6,14 @@ module.exports = function (server, models) {
     function getAllCodes(request, response, next) {
         Code.find({}, function (err, codes) {
             if (err) return console.error(err);
-            response.send(codes);
+            response.send({codes: codes});
             next();
         });
     }
 
     function getCodeById(request, response, next) {
         Code.findOne({"_id": request.params.id}, function (err, code) {
-            response.send(code);
+            response.send({code: code});
             next();
         });
     }
@@ -28,7 +28,7 @@ module.exports = function (server, models) {
 
             code.save(function (err) {
                 if (err) throw err;
-                response.send(code);
+                response.send({code: code});
                 next();
             });
         });
@@ -44,7 +44,7 @@ module.exports = function (server, models) {
         var newCode = Code({title: request.body.title, description: request.body.description});
         newCode.save(function (err) {
             if (err) throw err;
-            response.send(newCode);
+            response.send({code:newCode});
             next();
         });
     }

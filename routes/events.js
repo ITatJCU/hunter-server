@@ -16,9 +16,9 @@ module.exports = function (server, models) {
      * @param next
      */
     function getAllEvents(request, response, next) {
-        Event.find({}, eventPropertyFilter, {sort: {'date': -1}}, function (err, events) {
+        Event.find({}, eventPropertyFilter, {sort: {'date': -1}}, function (err, results) {
             if (err) return console.error(err);
-            response.send({events: event});
+            response.send({events: results});
             next();
         });
     }
