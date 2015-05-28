@@ -13,8 +13,13 @@ module.exports = function (server, models) {
 
     function getCodeById(request, response, next) {
         Code.findOne({"_id": request.params.id}, function (err, code) {
-            response.send(code);
-            next();
+            if (err) {
+                next(new restify.NotFoundError("Unknown user"));
+            }
+            else {
+                response.send({ code: code });
+                next();
+            }
         });
     }
 
