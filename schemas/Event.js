@@ -4,6 +4,7 @@ module.exports = function (mongoose) {
         title: {type: String, required: true, index: {unique: true}},
         description: String,
         date: Date,
+        venue: String,
         codes: [
             {
                 code: {type: mongoose.Schema.Types.ObjectId, ref: 'Code'}
