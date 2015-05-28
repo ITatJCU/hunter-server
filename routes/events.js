@@ -31,7 +31,7 @@ module.exports = function (server, models) {
      */
     function getEventById(request, response, next) {
         Event.findOne({"_id": request.params.id}, eventPropertyFilter, function (err, event) {
-            response.send(event);
+            response.send({event: event});
             next();
         });
     }
@@ -72,7 +72,7 @@ module.exports = function (server, models) {
         }
         newEvent.save(function (err) {
             if (err) throw err;
-            response.send(newEvent);
+            response.send({event: newEvent});
             next();
         });
     }
@@ -190,7 +190,7 @@ module.exports = function (server, models) {
             ],
             function (err, res) {
                 if (err) response.send(new restify.ImATeapotError("More Caffiene Needed..."));
-                response.send(res);
+                response.send({players: res});
                 next();
             });
 
