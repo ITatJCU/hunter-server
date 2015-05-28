@@ -37,6 +37,13 @@ module.exports = function (server, models) {
         });
     }
 
+    function getEventCodes(request, response, next) {
+        Event.findOne({"_id": request.params.id}, function (err, event) {
+            response.send({codes: event.codes});
+            next();
+        });
+    }
+
     /**
      * Updates an Event object based on supplied _id.
      * If _id doesn't exist a NotFoundError is returned.
@@ -130,10 +137,18 @@ module.exports = function (server, models) {
         Event.findOne({_id: request.params.eventId}, function (err, event) {
             if (err) throw err;
 
-            var codes = event.codes;
-            var index = codes.indexOf(request.params.codeId);
+            var index = -1;
+            //ToDo: This may introduce performance degradation if a large amount of codes exist.
+            for (var i = 0; i < event.codes.length; i++) {
+                //Note: don't compare types here. Just value
+                if (event.codes[i]._id == request.params.codeId) {
+                    index = i;
+                    break;
+                }
+            }
+
             if (index > -1) {
-                codes.splice(index, 1);
+                event.codes.splice(index, 1);
                 event.save(function (err) {
                     if (err) throw err;
                     response.send();
@@ -194,11 +209,14 @@ module.exports = function (server, models) {
     }
 
     server.get('/events', getAllEvents);
+
     server.get('/events/:id', getEventById);
+    server.get('/events/:id/codes', getEventCodes);
+
     server.put('/events', upsertEvent);
     server.put('/events/:eventId/:codeId', addCodeToEvent);
     server.del('/events', deleteEvent);
-    server.del('/events/:eventId/:codeId', removeCodeFromEvent)
+    server.del('/events/:eventId/:codeId', removeCodeFromEvent);
     server.get('/events/:id/leaderboard', getPlayerLeaderboardForEvent);
 
 };
