@@ -5,6 +5,7 @@ module.exports = function (server, models) {
     //Required for NotFoundError when an Event object does not exist
     var restify = require('restify');
     var mongoose = require('mongoose');
+    var util = require('../lib/utilities/objects');
 
 
     var eventPropertyFilter = "-codes -__v";
@@ -46,14 +47,10 @@ module.exports = function (server, models) {
     function updateEvent(request, response, next) {
         Event.findOne({_id: request.body._id}, eventPropertyFilter, function (err, event) {
             if (err) return next(new restify.NotFoundError("Unknown event"));
-            event.title = request.body.title;
-            event.description = request.body.description;
-            if (request.body.date != null && request.body.date != undefined) {
-                event.date = request.body.date;
-            }
+            util.mergeObjects(event, request.body);
             event.save(function (err) {
                 if (err) throw err;
-                response.send();
+                response.send({event: event});
                 next();
             });
         });
@@ -67,9 +64,9 @@ module.exports = function (server, models) {
      */
     function createEvent(request, response, next) {
         var newEvent = Event({title: request.body.title, description: request.body.description});
-        if (request.body.date != null && request.body.date != undefined) {
-            newEvent.date = request.body.date;
-        }
+
+        util.mergeObjects(newEvent, request.body);
+
         newEvent.save(function (err) {
             if (err) throw err;
             response.send({event: newEvent});
