@@ -31,7 +31,7 @@ module.exports = function (server, models) {
                         player.save(function (err) {
                             if (err) throw err;
                             server.io.emit('Code scanned', player);
-                            response.send(player);
+                            response.send({player: player});
                             next();
                         })
                     }
@@ -40,6 +40,6 @@ module.exports = function (server, models) {
         }
     }
 
-    server.get('/scan/:eventId/:codeId', addPlayerScan);
+    server.put('/scan/:eventId/:codeId', addPlayerScan);
 
 };
