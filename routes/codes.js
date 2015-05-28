@@ -14,7 +14,7 @@ module.exports = function (server, models) {
     function getCodeById(request, response, next) {
         Code.findOne({"_id": request.params.id}, function (err, code) {
             if (err) {
-                next(new restify.NotFoundError("Unknown user"));
+                next(new restify.NotFoundError("Unknown code"));
             }
             else {
                 response.send({ code: code });
