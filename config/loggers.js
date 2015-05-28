@@ -32,7 +32,7 @@ module.exports = function (server) {
 
     //Restify request based logging middleware
     function logRequest(req, res, next) {
-        var message = "Request \t" + req.connection.remoteAddress + "\t" + req.url;
+        var message = "Request \t" + req.connection.remoteAddress + "\t" + req.route.method + "\t" + req.url;
         loggers.log(message + "\tData:" + JSON.stringify(req.body));
         next();
     }
